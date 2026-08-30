@@ -1,0 +1,29 @@
+<%--
+    ============================================================
+    FormZAP - Fase 2 | Pessoa 2 (Iris) - VISAO
+    Fragmento: includes/rodape.jspf
+    Fecha a estrutura aberta em includes/cabecalho.jspf.
+
+    Se a pagina quiser mostrar um toast automatico ao carregar
+    (ex.: apos um redirect de sucesso), pode definir antes do
+    include final:
+        String toastMensagem = "Fornecedor guardado com sucesso!";
+        String toastTipo = "sucesso"; // ou "erro" / "aviso"
+    ============================================================
+--%>
+            </main>
+        </div>
+    </div>
+
+    <% if (toastMensagem != null) { %>
+    <div id="dados-toast-inicial" hidden
+         data-mensagem="<%= toastMensagem.replace("\"", "&quot;") %>"
+         data-tipo="<%= (toastTipo != null) ? toastTipo : "sucesso" %>"></div>
+    <% } %>
+
+    <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="<%= request.getContextPath() %>/js/app.js"></script>
+    <script src="<%= request.getContextPath() %>/js/validacao-campos.js"></script>
+</body>
+</html>

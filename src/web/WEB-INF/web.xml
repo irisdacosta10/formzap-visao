@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    ============================================================
+    FormZAP - Fase 2 | Pessoa 3 (Jonilson) - CONTROLADOR
+    Ficheiro: web.xml
+
+    Esta versao remove um bloco de configuracao do Spring
+    MVC (DispatcherServlet, mapeado a *.htm) que veio por
+    defeito do assistente do NetBeans quando o projecto foi
+    criado, mas que nunca chegou a ser usado - o projecto usa
+    Servlets simples (@WebServlet), nao Spring MVC, e o ficheiro
+    applicationContext.xml que esse bloco exigia nunca existiu.
+    Mante-lo arriscava gerar erros silenciosos no log do Tomcat
+    e podia gerar duvidas na defesa sobre uma tecnologia que
+    nao chegou a ser usada.
+
+    Foram acrescentadas as 3 <error-page>, tal como pedido no
+    comentario deixado pela Iris no topo de erro.jsp - agora,
+    qualquer erro 404, 500 ou excepcao nao tratada mostra a
+    pagina de erro estilizada em vez da pagina feia por defeito
+    do Tomcat.
+
+    Os 3 Servlets (CadastroServlet, ListarServlet, BuscarServlet)
+    NAO precisam de ser declarados aqui - usam a anotacao
+    @WebServlet, que o Tomcat 10 detecta automaticamente.
+    ============================================================
+-->
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+    <welcome-file-list>
+        <welcome-file>inicio.jsp</welcome-file>
+    </welcome-file-list>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/erro.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/erro.jsp</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/erro.jsp</location>
+    </error-page>
+
+</web-app>

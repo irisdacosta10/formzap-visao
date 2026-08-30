@@ -1,0 +1,99 @@
+<%--
+    ============================================================
+    FormZAP - Fase 2 | Pessoa 2 (Iris) - VISAO
+    Fragmento: includes/cabecalho.jspf
+
+    Incluido com <%@ include %> (estatico/em tempo de compilacao),
+    por isso as variaveis Java definidas na pagina que o inclui
+    ficam visiveis aqui. Cada pagina deve definir, ANTES do include:
+
+        String paginaAtual   = "inicio" | "cadastro" | "pesquisar" | "listar" | "";
+        String tituloPagina  = "Titulo mostrado no topo";
+        String subtituloPagina = "Descricao curta (opcional, pode ser null)";
+
+    ATUALIZACAO: "cadastro.jsp" e "pesquisar.jsp" deixaram de ser a
+    mesma pagina com uma ancora (#secaoBusca) - agora sao dois
+    ficheiros distintos, cada um com o seu proprio paginaAtual, para
+    o menu lateral acender a opcao certa.
+
+    Nao e responsabilidade da Visao decidir os URLs finais dos
+    Servlets - os hrefs abaixo (cadastro, listar) seguem os nomes
+    combinados no contrato (secçao 5/8.3 do documento mestre) com
+    a Pessoa 3 (Jonilson).
+    ============================================================
+--%>
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZAP - <%= (tituloPagina != null) ? tituloPagina : "Gestao de Fornecedores" %></title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+</head>
+<body>
+    <a href="#conteudo-principal" class="skip-link">Saltar para o conteudo principal</a>
+
+    <div class="app-shell">
+        <div class="sidebar-overlay"></div>
+
+        <aside class="sidebar" aria-label="Navegacao principal">
+            <div class="sidebar__cabecalho">
+                <img src="<%= request.getContextPath() %>/images/ZAP2.png" alt="" class="sidebar__logo">
+                <div class="sidebar__nome-app">
+                    ZAP
+                    <small>Gestao de Fornecedores</small>
+                </div>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a class="sidebar__link" href="<%= request.getContextPath() %>/inicio.jsp"
+                   <%= "inicio".equals(paginaAtual) ? "aria-current=\"page\"" : "" %>>
+                    <span class="icone" aria-hidden="true">&#8962;</span>
+                    <span class="rotulo">Inicio</span>
+                </a>
+
+                <p class="sidebar__grupo-titulo">Fornecedores</p>
+
+                <a class="sidebar__link" href="<%= request.getContextPath() %>/cadastro.jsp"
+                   <%= "cadastro".equals(paginaAtual) ? "aria-current=\"page\"" : "" %>>
+                    <span class="icone" aria-hidden="true">&#10133;</span>
+                    <span class="rotulo">Novo Fornecedor</span>
+                </a>
+
+                <a class="sidebar__link" href="<%= request.getContextPath() %>/pesquisar.jsp"
+                   <%= "pesquisar".equals(paginaAtual) ? "aria-current=\"page\"" : "" %>>
+                    <span class="icone" aria-hidden="true">&#128269;</span>
+                    <span class="rotulo">Pesquisar / Alterar</span>
+                </a>
+
+                <a class="sidebar__link" href="<%= request.getContextPath() %>/listar"
+                   <%= "listar".equals(paginaAtual) ? "aria-current=\"page\"" : "" %>>
+                    <span class="icone" aria-hidden="true">&#128203;</span>
+                    <span class="rotulo">Lista de Fornecedores</span>
+                </a>
+            </nav>
+
+            <div class="sidebar__rodape">
+                <button type="button" id="btnColapsarSidebar" class="sidebar__toggle"
+                        aria-expanded="true">
+                    <span class="icone" aria-hidden="true">&#8676;</span>
+                    <span class="rotulo">Colapsar menu</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="main-wrapper">
+            <header class="topbar">
+                <button type="button" id="btnAbrirSidebarMobile" class="topbar__toggle-mobile"
+                        aria-label="Abrir menu de navegacao" aria-controls="menuLateral" aria-expanded="false">
+                    &#9776;
+                </button>
+                <div class="topbar__titulos">
+                    <h1><%= (tituloPagina != null) ? tituloPagina : "Gestao de Fornecedores" %></h1>
+                    <% if (subtituloPagina != null) { %>
+                    <p><%= subtituloPagina %></p>
+                    <% } %>
+                </div>
+            </header>
+
+            <main id="conteudo-principal" class="conteudo" tabindex="-1">

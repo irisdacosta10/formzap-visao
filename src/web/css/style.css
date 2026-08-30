@@ -1,0 +1,1075 @@
+/* ============================================================
+   FormZAP - Fase 2 | Pessoa 2 (Iris) - Visao
+   Design system partilhado por cadastro.jsp, sucesso.jsp, erro.jsp,
+   listarFornecedores.jsp e index.html.
+
+   Paleta mantida do projecto original (rosa ZAP #e6007e) e reforcada
+   com o amarelo da marca (#FFD400, extraido do logotipo ZAP2.png)
+   para estados activos/foco. Tudo o resto (cinzentos, branco) segue
+   o que ja existia.
+   ============================================================ */
+
+:root {
+    /* Marca */
+    --cor-primaria: #e6007e;
+    --cor-primaria-escura: #c40069;
+    --cor-primaria-suave: #ffe5ec;
+    --cor-acento: #ffd400;           /* amarelo do logotipo - usado em foco/destaques */
+    --cor-acento-escuro: #a88600;
+
+    /* Semantica */
+    --cor-sucesso: #1c7c43;
+    --cor-sucesso-bg: #e6f9ee;
+    --cor-sucesso-borda: #2ecc71;
+    --cor-erro: #a30057;
+    --cor-erro-bg: #ffe5ec;
+    --cor-erro-borda: var(--cor-primaria);
+    --cor-aviso: #8a6100;
+    --cor-aviso-bg: #fff6db;
+    --cor-aviso-borda: var(--cor-acento);
+
+    /* Neutros */
+    --cor-fundo: #f2f2f2;
+    --cor-superficie: #ffffff;
+    --cor-borda: #ddd;
+    --cor-texto: #2b2b2b;
+    --cor-texto-suave: #666666;
+    --cor-texto-fraco: #838383;
+
+    /* Sidebar - mesmo cinza usado nos campos do formulario (#f4f4f4),
+       para ficar consistente com o resto da paleta em vez de um
+       cromado escuro dissonante */
+    --cor-sidebar-bg: #f4f4f4;
+    --cor-sidebar-texto: #333333;
+    --cor-sidebar-texto-suave: #7a7a7a;
+    --cor-sidebar-hover: rgba(0, 0, 0, 0.06);
+    --cor-sidebar-borda: rgba(0, 0, 0, 0.09);
+    --cor-sidebar-activo: var(--cor-primaria);
+
+    /* Layout */
+    --largura-sidebar: 250px;
+    --largura-sidebar-colapsada: 72px;
+    --raio: 6px;
+    --sombra: 0 2px 10px rgba(0, 0, 0, 0.08);
+    --transicao: 180ms ease;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--cor-fundo);
+    margin: 0;
+    color: var(--cor-texto);
+    line-height: 1.45;
+}
+
+h1, h2, h3, legend { line-height: 1.25; }
+
+/* ------------------------------------------------------------
+   Acessibilidade transversal
+   ------------------------------------------------------------ */
+
+.skip-link {
+    position: absolute;
+    left: -999px;
+    top: auto;
+    background: var(--cor-primaria);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 0 0 var(--raio) 0;
+    z-index: 1000;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    left: 0;
+    top: 0;
+}
+
+/* Foco visivel e consistente em toda a aplicacao (teclado) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--cor-acento);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Fallback para navegadores sem :focus-visible */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 3px solid var(--cor-acento);
+    outline-offset: 1px;
+}
+
+.visualmente-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    padding: 0;
+}
+
+/* ------------------------------------------------------------
+   Estrutura geral: sidebar + conteudo
+   ------------------------------------------------------------ */
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--largura-sidebar);
+    flex-shrink: 0;
+    background: var(--cor-sidebar-bg);
+    color: var(--cor-sidebar-texto);
+    border-right: 1px solid var(--cor-borda);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    transition: width var(--transicao);
+    z-index: 100;
+}
+
+.sidebar__cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--cor-sidebar-borda);
+    min-height: 64px;
+}
+
+.sidebar__logo {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 6px;
+}
+
+.sidebar__nome-app {
+    font-weight: bold;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar__nome-app small {
+    display: block;
+    font-weight: normal;
+    font-size: 11px;
+    color: var(--cor-sidebar-texto-suave);
+}
+
+.sidebar__nav {
+    flex: 1;
+    padding: 14px 10px;
+    overflow-y: auto;
+}
+
+.sidebar__grupo-titulo {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--cor-sidebar-texto-suave);
+    padding: 8px 12px 6px;
+    white-space: nowrap;
+}
+
+.sidebar__link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+    border-radius: var(--raio);
+    color: var(--cor-sidebar-texto);
+    text-decoration: none;
+    font-size: 14px;
+    border-left: 3px solid transparent;
+    white-space: nowrap;
+    transition: background var(--transicao), border-color var(--transicao);
+}
+
+.sidebar__link .icone {
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.sidebar__link:hover {
+    background: var(--cor-sidebar-hover);
+    text-decoration: none;
+}
+
+.sidebar__link[aria-current="page"] {
+    background: var(--cor-sidebar-activo);
+    color: #fff;
+    border-left-color: var(--cor-acento);
+    font-weight: bold;
+}
+
+.sidebar__rodape {
+    padding: 12px 10px;
+    border-top: 1px solid var(--cor-sidebar-borda);
+}
+
+.sidebar__toggle {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-sidebar-texto);
+    padding: 9px 10px;
+    border-radius: var(--raio);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.sidebar__toggle:hover { background: var(--cor-sidebar-hover); }
+
+/* Sidebar colapsada (desktop) */
+.app-shell.sidebar-colapsada .sidebar {
+    width: var(--largura-sidebar-colapsada);
+}
+
+.app-shell.sidebar-colapsada .sidebar__nome-app,
+.app-shell.sidebar-colapsada .sidebar__grupo-titulo,
+.app-shell.sidebar-colapsada .sidebar__link span.rotulo,
+.app-shell.sidebar-colapsada .sidebar__toggle span.rotulo {
+    display: none;
+}
+
+.app-shell.sidebar-colapsada .sidebar__link,
+.app-shell.sidebar-colapsada .sidebar__toggle {
+    justify-content: center;
+}
+
+/* ------------------------------------------------------------
+   Area principal
+   ------------------------------------------------------------ */
+
+.main-wrapper {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    background: var(--cor-superficie);
+    border-bottom: 1px solid var(--cor-borda);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.topbar__toggle-mobile {
+    display: none;
+    background: var(--cor-fundo);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.topbar__titulos h1 {
+    font-size: 19px;
+    margin: 0;
+    color: var(--cor-texto);
+}
+
+.topbar__titulos p {
+    margin: 2px 0 0;
+    font-size: 12.5px;
+    color: var(--cor-texto-suave);
+}
+
+.conteudo {
+    padding: 26px 24px 40px;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.conteudo:focus { outline: none; } /* recebe foco programatico ao navegar, sem contorno visual aqui */
+
+.folha {
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    padding: 25px 30px 32px;
+}
+
+.folha--estreita { max-width: 720px; margin: 0 auto; }
+
+/* Cabecalho tipo "cartao" dentro da folha (logotipo + titulo do formulario) */
+.cabecalho-cartao {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 3px solid var(--cor-primaria);
+    padding-bottom: 12px;
+    margin-bottom: 22px;
+}
+
+.cabecalho-cartao img {
+    height: 42px;
+    width: auto;
+}
+
+.cabecalho-cartao .titulo-form {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--cor-texto);
+    margin: 0;
+}
+
+.cabecalho-cartao .subtitulo-form {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+}
+
+/* ------------------------------------------------------------
+   Linha de topo do formulario (operacao + data)
+   ------------------------------------------------------------ */
+
+.linha-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f5f5f5;
+    border: 1px solid var(--cor-borda);
+    padding: 12px 16px;
+    border-radius: var(--raio);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+fieldset.tipo-operacao {
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+fieldset.tipo-operacao legend {
+    font-weight: bold;
+    font-size: 13px;
+    color: var(--cor-texto);
+    padding: 0;
+    margin-right: 4px;
+}
+
+.opcao-operacao {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 10px;
+    border-radius: var(--raio);
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.opcao-operacao:hover { background: rgba(0,0,0,0.04); }
+
+.opcao-operacao input[type="radio"] { accent-color: var(--cor-primaria); width: 16px; height: 16px; }
+
+.opcao-operacao--eliminar { color: var(--cor-erro); }
+
+.data-cadastro {
+    font-weight: bold;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.data-cadastro input {
+    background: #e9e9e9;
+    border: 1px solid var(--cor-borda);
+    padding: 6px 10px;
+    border-radius: 3px;
+    font-weight: normal;
+}
+
+/* ------------------------------------------------------------
+   Busca por NIF (fluxo Alterar/Eliminar)
+   ------------------------------------------------------------ */
+
+.busca-nif {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--cor-primaria-suave);
+    border: 1px solid #f3b9d4;
+    padding: 14px 16px;
+    border-radius: var(--raio);
+    margin-bottom: 22px;
+}
+
+.busca-nif .campo { min-width: 220px; flex: 1; }
+
+.busca-nif p.texto-ajuda {
+    flex-basis: 100%;
+    margin: 0 0 2px;
+    font-size: 12.5px;
+    color: var(--cor-texto-suave);
+}
+
+/* ------------------------------------------------------------
+   Cartao do fornecedor encontrado (pesquisar.jsp)
+   Mostra o resultado da busca por NIF com as accoes Editar/Eliminar
+   lado a lado - o utilizador escolhe o que quer fazer, ou sai.
+   ------------------------------------------------------------ */
+
+.cartao-fornecedor {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+}
+
+.cartao-fornecedor__cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cartao-fornecedor__nome {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: bold;
+    color: var(--cor-texto);
+}
+
+.cartao-fornecedor__acoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.cartao-fornecedor__acoes form { margin: 0; }
+
+.cartao-fornecedor__dados {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.cartao-fornecedor__dados > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cartao-fornecedor__rotulo {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--cor-texto-fraco);
+}
+
+/* ------------------------------------------------------------
+   Painel de edicao (formulario completo, fica escondido ate o
+   utilizador clicar em "Editar" no cartao do fornecedor)
+   ------------------------------------------------------------ */
+
+.painel-edicao {
+    border-top: 2px dashed var(--cor-borda);
+    padding-top: 18px;
+    margin-top: 4px;
+}
+
+/* ------------------------------------------------------------
+   Seccoes do formulario
+   ------------------------------------------------------------ */
+
+fieldset.seccao-form {
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    margin-bottom: 22px;
+    padding: 16px 20px 20px;
+    transition: opacity var(--transicao);
+}
+
+fieldset.seccao-form legend {
+    font-weight: bold;
+    color: var(--cor-primaria);
+    padding: 0 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nota-seccao {
+    font-size: 12px;
+    color: var(--cor-texto-fraco);
+    font-style: italic;
+    margin: -6px 0 12px;
+}
+
+/* Estado: campos desactivados quando a operacao e "Eliminar"
+   (so o NIF interessa para eliminar) */
+fieldset.seccao-form[data-desactivada="true"] {
+    opacity: 0.5;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 20px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px 20px;
+}
+
+.campo { display: flex; flex-direction: column; }
+
+.campo.largo { grid-column: 1 / -1; }
+
+.campo label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.campo .obrigatorio {
+    color: var(--cor-primaria);
+    font-weight: bold;
+    margin-left: 2px;
+}
+
+.campo input[type="text"],
+.campo input[type="email"],
+.campo input[type="tel"],
+.campo input[type="date"],
+.campo select {
+    background: #f4f4f4;
+    border: 1px solid var(--cor-borda);
+    border-radius: 3px;
+    padding: 9px 10px;
+    font-size: 14px;
+    color: var(--cor-texto);
+    width: 100%;
+    transition: border-color var(--transicao), background var(--transicao);
+}
+
+.campo input:hover,
+.campo select:hover {
+    border-color: #bbb;
+}
+
+.campo input:focus,
+.campo select:focus {
+    border-color: var(--cor-primaria);
+    background: #fff;
+}
+
+.campo input:disabled,
+.campo select:disabled {
+    background: #ececec;
+    color: var(--cor-texto-fraco);
+    cursor: not-allowed;
+}
+
+.campo input:invalid:not(:placeholder-shown) {
+    border-color: var(--cor-erro);
+}
+
+.campo small.ajuda-campo {
+    font-size: 11.5px;
+    color: var(--cor-texto-fraco);
+    margin-top: 4px;
+}
+
+/* ------------------------------------------------------------
+   Botoes (todos os estados: normal, hover, active, disabled, loading)
+   ------------------------------------------------------------ */
+
+.acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+button, .btn {
+    padding: 11px 22px;
+    border: 1px solid transparent;
+    border-radius: var(--raio);
+    font-size: 14.5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background var(--transicao), transform 80ms ease, box-shadow var(--transicao);
+    line-height: 1.2;
+}
+
+button:active, .btn:active { transform: translateY(1px); }
+
+button:disabled, .btn[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-primario {
+    background: var(--cor-primaria);
+    color: #fff;
+}
+.btn-primario:hover { background: var(--cor-primaria-escura); }
+.btn-primario:focus-visible { box-shadow: 0 0 0 4px rgba(230,0,126,0.25); }
+
+.btn-secundario {
+    background: #e0e0e0;
+    color: #333;
+}
+.btn-secundario:hover { background: #cfcfcf; }
+
+.btn-perigo {
+    background: #fff;
+    color: var(--cor-erro);
+    border-color: var(--cor-erro);
+}
+.btn-perigo:hover { background: var(--cor-erro-bg); }
+
+.btn-texto {
+    background: transparent;
+    color: var(--cor-primaria);
+    padding: 8px 10px;
+}
+.btn-texto:hover { background: var(--cor-primaria-suave); }
+
+.btn-pequeno { padding: 6px 12px; font-size: 13px; }
+
+/* Loading state (usado por js/app.js ao submeter formularios) */
+.btn.is-loading {
+    color: transparent !important;
+    pointer-events: none;
+    position: relative;
+}
+
+.btn.is-loading::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: girar 0.7s linear infinite;
+}
+
+.btn-secundario.is-loading::after,
+.btn-texto.is-loading::after {
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top-color: var(--cor-texto);
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn.is-loading::after { animation-duration: 1.4s; }
+    * { scroll-behavior: auto !important; }
+}
+
+/* ------------------------------------------------------------
+   Mensagens inline (erro/sucesso/aviso dentro da folha)
+   ------------------------------------------------------------ */
+
+.mensagem {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--raio);
+    margin-bottom: 18px;
+    font-size: 14px;
+    border: 1px solid;
+}
+
+.mensagem .icone { font-size: 16px; line-height: 1.3; }
+
+.mensagem-erro {
+    background: var(--cor-erro-bg);
+    border-color: var(--cor-erro-borda);
+    color: var(--cor-erro);
+}
+
+.mensagem-sucesso {
+    background: var(--cor-sucesso-bg);
+    border-color: var(--cor-sucesso-borda);
+    color: var(--cor-sucesso);
+}
+
+.mensagem-aviso {
+    background: var(--cor-aviso-bg);
+    border-color: var(--cor-aviso-borda);
+    color: var(--cor-aviso);
+}
+
+/* ------------------------------------------------------------
+   Toasts (feedback flutuante, nao-bloqueante)
+   ------------------------------------------------------------ */
+
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 340px;
+}
+
+.toast {
+    background: var(--cor-superficie);
+    border-left: 5px solid var(--cor-primaria);
+    border-radius: var(--raio);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    padding: 12px 14px;
+    font-size: 13.5px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    animation: entrar-toast 220ms ease;
+}
+
+.toast--sucesso { border-left-color: var(--cor-sucesso-borda); }
+.toast--erro { border-left-color: var(--cor-erro-borda); }
+.toast--aviso { border-left-color: var(--cor-acento); }
+
+.toast__fechar {
+    background: transparent;
+    border: none;
+    color: var(--cor-texto-suave);
+    cursor: pointer;
+    margin-left: auto;
+    padding: 0 2px;
+    font-size: 15px;
+}
+
+@keyframes entrar-toast {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------
+   Pagina Inicio (dashboard): painel de boas-vindas + cards
+   ------------------------------------------------------------ */
+
+.painel-boas-vindas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: linear-gradient(135deg, var(--cor-primaria-suave) 0%, #ffffff 65%);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    padding: 26px 30px;
+    margin-bottom: 28px;
+}
+
+.painel-boas-vindas__saudacao {
+    margin: 0 0 4px;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--cor-primaria-escura);
+    font-weight: bold;
+}
+
+.painel-boas-vindas__titulo {
+    margin: 0 0 8px;
+    font-size: 22px;
+    color: var(--cor-texto);
+}
+
+.painel-boas-vindas__descricao {
+    margin: 0;
+    max-width: 480px;
+    font-size: 14px;
+    color: var(--cor-texto-suave);
+}
+
+.painel-boas-vindas__ilustracao {
+    width: 180px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.titulo-seccao-cards {
+    font-size: 16px;
+    margin: 0 0 14px;
+    color: var(--cor-texto);
+}
+
+.grelha-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.card-atalho {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    padding: 20px;
+    text-decoration: none;
+    color: var(--cor-texto);
+    transition: border-color var(--transicao), box-shadow var(--transicao), transform var(--transicao);
+}
+
+.card-atalho:hover {
+    border-color: var(--cor-primaria);
+    box-shadow: var(--sombra);
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.card-atalho__icone {
+    font-size: 26px;
+}
+
+.card-atalho__titulo {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.card-atalho__descricao {
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+    line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+    .painel-boas-vindas { flex-direction: column; text-align: center; }
+    .painel-boas-vindas__descricao { max-width: none; }
+    .grelha-cards { grid-template-columns: 1fr; }
+}
+
+/* ------------------------------------------------------------
+   Tabela de listagem
+   ------------------------------------------------------------ */
+
+.tabela-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+}
+
+table.lista {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 13.5px;
+}
+
+table.lista caption {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    color: var(--cor-texto-suave);
+}
+
+table.lista th, table.lista td {
+    border-bottom: 1px solid var(--cor-borda);
+    padding: 10px 12px;
+    text-align: left;
+}
+
+table.lista thead th {
+    background: var(--cor-primaria);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+table.lista tbody tr:nth-child(even) { background: #f9f9f9; }
+table.lista tbody tr:hover { background: var(--cor-primaria-suave); }
+
+table.lista td.col-acoes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+table.lista td.col-acoes form { margin: 0; display: inline; }
+
+.estado-vazio {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--cor-texto-suave);
+}
+
+.estado-vazio .icone-vazio { font-size: 34px; margin-bottom: 10px; }
+
+.rodape-lista {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+}
+
+/* ------------------------------------------------------------
+   Utilitarios
+   ------------------------------------------------------------ */
+
+.voltar {
+    display: inline-block;
+    margin-top: 16px;
+    color: var(--cor-primaria);
+    text-decoration: none;
+    font-weight: bold;
+}
+.voltar:hover { text-decoration: underline; }
+
+.badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: bold;
+    background: var(--cor-primaria-suave);
+    color: var(--cor-primaria-escura);
+}
+
+/* ------------------------------------------------------------
+   Responsividade
+   ------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 12px rgba(0,0,0,0.25);
+    }
+
+    .app-shell.sidebar-mobile-aberta .sidebar {
+        transform: translateX(0);
+    }
+
+    .app-shell.sidebar-colapsada .sidebar { width: var(--largura-sidebar); }
+
+    .topbar__toggle-mobile { display: inline-flex; }
+
+    .grid, .grid-3 { grid-template-columns: 1fr; }
+
+    .conteudo { padding: 18px 14px 32px; }
+
+    .folha { padding: 18px 16px 22px; }
+}
+
+/* Sobreposicao escura atras da sidebar em ecrans pequenos */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 90;
+}
+
+@media (max-width: 900px) {
+    .app-shell.sidebar-mobile-aberta .sidebar-overlay { display: block; }
+}
+
+/* ============================================================
+   Estados visuais de validacao por campo (Pessoa 4 - Elizabeth)
+   ============================================================
+   Nota de acessibilidade: a cor nunca e o UNICO sinal de erro/
+   sucesso - o JS que usa estas classes tambem muda o texto de
+   ajuda do campo e o atributo aria-invalid, para quem usa leitor
+   de ecra ou tem dificuldade em distinguir cores.
+   ============================================================ */
+
+.campo input.campo-valido,
+.campo select.campo-valido {
+    border-color: var(--cor-sucesso-borda);
+    background: #f3fbf6;
+}
+
+.campo input.campo-valido:focus,
+.campo select.campo-valido:focus {
+    border-color: var(--cor-sucesso-borda);
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+}
+
+.campo input.campo-invalido,
+.campo select.campo-invalido {
+    border-color: var(--cor-erro-borda);
+    background: var(--cor-erro-bg);
+}
+
+.campo input.campo-invalido:focus,
+.campo select.campo-invalido:focus {
+    border-color: var(--cor-erro-borda);
+    box-shadow: 0 0 0 3px rgba(230, 0, 126, 0.15);
+}
+
+.campo small.ajuda-campo.ajuda-erro {
+    color: var(--cor-erro);
+    font-weight: bold;
+}
